@@ -7,7 +7,6 @@ def counting_sort(array, exp):
     for num in array:
         digit = (num // exp) % 10
         occurrences[digit] += 1
-        print(digit)
 
     # Find Sums
     sums = [occurrences[0]]
@@ -32,9 +31,7 @@ def RadixSort(array):
     exp = 1
     while max(array) // exp > 0:
         array = counting_sort(array, exp)
-        print(array)
         exp *= 10
-        print()
     return array
 
 
@@ -48,6 +45,3 @@ print(nums)
 # 6483 // 100 = 64
 # 6483 // 1000 = 6
 # 6483 // 10000 = 0
-
-
-x = 6483
