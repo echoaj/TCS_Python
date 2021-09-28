@@ -49,7 +49,6 @@ class Sprite:
         return right and left and bottom and top
 
 
-
 class Mario(Sprite):
     def __init__(self, speed):
         self.width = 100
