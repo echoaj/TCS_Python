@@ -19,9 +19,6 @@ class Sprite:
     def flip(self):
         self.image = pg.transform.flip(self.image, True, False)
 
-    def move(self, speed, direction):
-        self.x += speed * direction
-
     def get_y(self):
         return self.y
 
@@ -50,12 +47,13 @@ class Sprite:
 
 
 class Mario(Sprite):
-    def __init__(self, speed):
+    def __init__(self):
         self.width = 100
         self.height = 100
-        self.speed = speed
+        self.speedX = 0
+        self.last_pos = 0
         super().__init__(x=100, y=480, image='Images/mario.png', w=self.width, h=self.height+30)
-        self.current_direction = 1
+        self.direction = "right"
         self.mariojump = pg.mixer.Sound('Sounds/mario_jump.wav')
         self.mario_jump = pg.image.load('Images/mario_jump2.png')
         self.mario_jump = pg.transform.scale(self.mario_jump, (self.width, self.height))
@@ -91,15 +89,29 @@ class Mario(Sprite):
         if key[pg.K_DOWN]:
             print(super().get_y())
 
-    def move(self, speed, direction):
-        if direction != self.current_direction:
-            self.current_direction *= -1
+    def orient_image(self, speedX):
+        if self.direction == "right" and speedX < 0:
             super().flip()
             self.mario_jump = pg.transform.flip(self.mario_jump, True, False)
-        super().move(speed, direction)
+            self.direction = "left"
+        elif self.direction == "left" and speedX > 0:
+            super().flip()
+            self.mario_jump = pg.transform.flip(self.mario_jump, True, False)
+            self.direction = "right"
 
-    def get_current_direction(self):
-        return self.current_direction
+    def set_speedX(self, speedX):
+        self.orient_image(speedX)
+        self.speedX = speedX
+
+    def move(self):
+        self.last_pos = self.x
+        self.x += self.speedX
+
+    def backup(self):
+        self.x = self.last_pos
+
+    def get_direction(self):
+        return self.direction
 
     def mushroom(self):
         window.blit(self.big_mario, (self.x, self.y))
@@ -162,7 +174,7 @@ window = pg.display.set_mode((1000, 700))
 
 # mariomusic = pg.mixer.music.load('supermariobros.mp3')
 # pg.mixer.music.play(-1)
-mario_obj = Mario(speed=18)
+mario_obj = Mario()
 pipe_obj = Pipe()
 goomba_obj = Goomba()
 mush_obj = Mushroom()
@@ -191,15 +203,19 @@ while True:
     koopa_obj.display()
 
     key = pg.key.get_pressed()
-    if key[pg.K_LEFT] and not mario_obj.touching(pipe_obj):
-        mario_obj.move(mario_obj.speed, -1)
-        if mario_obj.touching(pipe_obj):
-            mario_obj.move(mario_obj.speed, 1)
 
-    if key[pg.K_RIGHT] and not mario_obj.touching(pipe_obj):
-        mario_obj.move(mario_obj.speed, 1)
-        if mario_obj.touching(pipe_obj):
-            mario_obj.move(mario_obj.speed, -1)
+    if key[pg.K_LEFT]:
+        mario_obj.set_speedX(-10)
+    elif key[pg.K_RIGHT]:
+        mario_obj.set_speedX(10)
+    else:
+        mario_obj.set_speedX(0)
+
+    if mario_obj.touching(pipe_obj):
+        mario_obj.set_speedX(0)
+        mario_obj.backup()
+
+    mario_obj.move()
 
     mario_obj.jump()
     mario_obj.touching(Qblock_obj)
