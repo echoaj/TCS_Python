@@ -50,8 +50,6 @@ class Mario(Sprite):
     def __init__(self):
         self.width = 100
         self.height = 100
-        self.speedX = 0
-        self.last_pos = 0
         super().__init__(x=100, y=480, image='Images/mario.png', w=self.width, h=self.height+30)
         self.direction = "right"
         self.mariojump = pg.mixer.Sound('Sounds/mario_jump.wav')
@@ -99,16 +97,15 @@ class Mario(Sprite):
             self.mario_jump = pg.transform.flip(self.mario_jump, True, False)
             self.direction = "right"
 
-    def set_speedX(self, speedX):
+    def move(self, speedX):
         self.orient_image(speedX)
-        self.speedX = speedX
+        self.x += speedX
 
-    def move(self):
-        self.last_pos = self.x
-        self.x += self.speedX
+    def set_last_pos(self):
+        self.last_pos = (self.x, self.y)
 
     def backup(self):
-        self.x = self.last_pos
+        self.x, self.y = self.last_pos
 
     def get_direction(self):
         return self.direction
@@ -144,7 +141,7 @@ class Goomba(Sprite):
 
 class Pipe(Sprite):
     def __init__(self):
-        super().__init__(500, 434, 'Images/pipe.png', 170, 170)
+        super().__init__(500, 434, 'Images/pipe2.png', 170, 170)
 
 
 class Mushroom(Sprite):
@@ -204,18 +201,14 @@ while True:
 
     key = pg.key.get_pressed()
 
+    mario_obj.set_last_pos()
     if key[pg.K_LEFT]:
-        mario_obj.set_speedX(-10)
+        mario_obj.move(-10)
     elif key[pg.K_RIGHT]:
-        mario_obj.set_speedX(10)
-    else:
-        mario_obj.set_speedX(0)
+        mario_obj.move(10)
 
     if mario_obj.touching(pipe_obj):
-        mario_obj.set_speedX(0)
         mario_obj.backup()
-
-    mario_obj.move()
 
     mario_obj.jump()
     mario_obj.touching(Qblock_obj)
