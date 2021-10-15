@@ -59,6 +59,7 @@ class Mario(Sprite):
         self.big_mario = pg.transform.scale(self.big_mario, (self.width, self.height))
         self.velocity = 50
         self.in_air = False
+        self.toggle = True
 
     def display(self):
         if self.in_air:
@@ -67,25 +68,20 @@ class Mario(Sprite):
             super().display()
 
     def jump(self):
+        print(self.velocity)
         key = pg.key.get_pressed()
         if self.velocity == 50 and key[pg.K_UP]:
-            y = super().get_y()
-            # super().set_y(y - self.velocity)
             pg.mixer.Sound.play(self.mariojump)
             self.in_air = True
-
         if self.in_air:
-            y = super().get_y()
-            super().set_y(y - self.velocity)
+            self.y -= self.velocity
             self.velocity -= 5
 
-        if super().get_y() >= 480 and self.in_air:
+    def stand_on_top(self, limit):
+        if self.y+self.h >= limit-20 and self.in_air:
             self.in_air = False
             self.velocity = 50
-            print(super().get_y())
-
-        if key[pg.K_DOWN]:
-            print(super().get_y())
+        self.toggle = False
 
     def orient_image(self, speedX):
         if self.direction == "right" and speedX < 0:
@@ -105,7 +101,8 @@ class Mario(Sprite):
         self.last_pos = (self.x, self.y)
 
     def backup(self):
-        self.x, self.y = self.last_pos
+        if self.toggle:
+            self.x, self.y = self.last_pos
 
     def get_direction(self):
         return self.direction
@@ -141,6 +138,7 @@ class Goomba(Sprite):
 
 class Pipe(Sprite):
     def __init__(self):
+
         super().__init__(500, 434, 'Images/pipe2.png', 170, 170)
 
 
@@ -209,9 +207,10 @@ while True:
 
     if mario_obj.touching(pipe_obj):
         mario_obj.backup()
+        mario_obj.stand_on_top(pipe_obj.y)
 
     mario_obj.jump()
-    mario_obj.touching(Qblock_obj)
+    mario_obj.stand_on_top(600)
     if mario_obj.touching(goomba_obj) and mario_obj.velocity <= -1:
         goomba_obj.stomp()
     else:
@@ -221,7 +220,7 @@ while True:
     if mario_obj.touching(mush_obj):
         print('power up!')
         mario_obj.mushroom()
-
+    # pg.draw.rect(window, (0,0,0), (300, 600, 40, 40))
     mario_obj.display()
     pg.display.update()
 
