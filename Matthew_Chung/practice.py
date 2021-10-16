@@ -12,10 +12,10 @@ riffle = pg.image.load("electric riffle.png")
 riffle = pg.transform.flip(riffle, True, False)
 riffle = pg.transform.scale(riffle, (40, 60))
 
-rect_x = 400
-rect_y = 500
+rect_x = 300
+rect_y = 300
 speed_x = 3
-speed_y = 3
+speed_y = 1.5
 rate_x = 0.05
 rate_y = 0.05
 
@@ -33,10 +33,16 @@ while True:
     # Move Block
     # move left
     rect_x -= speed_x
-    speed_x -= rate_x
+    speed_x += rate_x
+    if speed_x < -3 or speed_x > 3:
+        rate_x *= -1
+
     # move up
-    rect_y -= speed_y
-    # speed_y -= rate_y
+    rect_y += speed_y
+    if speed_x > -0.001 and speed_x < 0.001:
+        speed_y *= -1
+
+    print(speed_x)
 
     pg.display.update()
     clock.tick(60)
