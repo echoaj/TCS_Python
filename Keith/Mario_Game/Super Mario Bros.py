@@ -41,8 +41,8 @@ class Sprite:
         (x2, y2, w2, h2) = sprite1.get_xywh()
         right = self.x < x2 + w2            #   | | <-
         left = self.x + self.w > x2         # ->| |
-        bottom = self.y < y2 + self.h
-        top = h2 + self.y > y2
+        bottom = self.y < y2 + h2
+        top = self.y + self.h > y2
         return right and left and bottom and top
 
 
@@ -58,8 +58,8 @@ class Mario(Sprite):
         self.big_mario = pg.image.load('Images/big_mario.png')
         self.big_mario = pg.transform.scale(self.big_mario, (self.width, self.height))
         self.velocity = 50
+        self.state = {"in_air":False, "on_top_of_pipe":False}
         self.in_air = False
-        self.toggle = True
 
     def display(self):
         if self.in_air:
@@ -68,20 +68,30 @@ class Mario(Sprite):
             super().display()
 
     def jump(self):
-        print(self.velocity)
-        key = pg.key.get_pressed()
-        if self.velocity == 50 and key[pg.K_UP]:
+        if self.velocity == 50:
             pg.mixer.Sound.play(self.mariojump)
-            self.in_air = True
-        if self.in_air:
-            self.y -= self.velocity
-            self.velocity -= 5
+            self.state["in_air"] = True
 
-    def stand_on_top(self, limit):
-        if self.y+self.h >= limit-20 and self.in_air:
-            self.in_air = False
-            self.velocity = 50
-        self.toggle = False
+    def gravity(self, on):
+        if on:
+            if self.state["in_air"]:
+                self.y -= self.velocity
+                self.velocity -= 5
+        else:
+            if self.state["in_air"]:
+                self.state["in_air"] = False
+                self.state["on_top_of_pipe"] = True
+                self.velocity = 50
+
+    def stand_on_top(self, platform=None, constant=False):
+        if constant:
+            if self.y + self.h > constant:
+                self.gravity(False)
+        if platform:
+            if platform.x < self.x + self.w and self.x < platform.x + platform.w:
+                self.gravity(False)
+            elif not self.state["in_air"]:
+                self.gravity(True)
 
     def orient_image(self, speedX):
         if self.direction == "right" and speedX < 0:
@@ -101,8 +111,7 @@ class Mario(Sprite):
         self.last_pos = (self.x, self.y)
 
     def backup(self):
-        if self.toggle:
-            self.x, self.y = self.last_pos
+        self.x, self.y = self.last_pos
 
     def get_direction(self):
         return self.direction
@@ -139,7 +148,7 @@ class Goomba(Sprite):
 class Pipe(Sprite):
     def __init__(self):
 
-        super().__init__(500, 434, 'Images/pipe2.png', 170, 170)
+        super().__init__(470, 440, 'Images/pipe2.png', 170, 170)
 
 
 class Mushroom(Sprite):
@@ -190,7 +199,6 @@ while True:
             exit()
 
     # Your game code goes here...
-    print(mario_obj.velocity)
     window.blit(mario_background, (0, 0))
     pipe_obj.display()
     mush_obj.display()
@@ -202,15 +210,18 @@ while True:
     mario_obj.set_last_pos()
     if key[pg.K_LEFT]:
         mario_obj.move(-10)
-    elif key[pg.K_RIGHT]:
+    if key[pg.K_RIGHT]:
         mario_obj.move(10)
+    if key[pg.K_UP]:
+        mario_obj.jump()
+
+    mario_obj.gravity(True)
 
     if mario_obj.touching(pipe_obj):
+        mario_obj.gravity(False)
         mario_obj.backup()
-        mario_obj.stand_on_top(pipe_obj.y)
 
-    mario_obj.jump()
-    mario_obj.stand_on_top(600)
+    mario_obj.stand_on_top(constant=600)
     if mario_obj.touching(goomba_obj) and mario_obj.velocity <= -1:
         goomba_obj.stomp()
     else:
