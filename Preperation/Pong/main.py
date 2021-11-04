@@ -13,8 +13,8 @@ clock = pg.time.Clock()
 # BAll
 bx = width/2
 by = height/2
-speedx = 5
-speedy = 2
+speedx = 13
+speedy = 8
 ball_size = 40
 ball_color = (0,200,0)
 
@@ -36,6 +36,7 @@ while run:
     for event in pg.event.get():
         if event.type == pg.QUIT:
             run = False
+
 
     # Ball
     pg.draw.ellipse(screen, ball_color, (int(bx),int(by),ball_size,ball_size))

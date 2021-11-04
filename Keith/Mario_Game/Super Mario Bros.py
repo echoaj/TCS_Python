@@ -83,15 +83,15 @@ class Mario(Sprite):
                 self.state["on_top_of_pipe"] = True
                 self.velocity = 50
 
-    def stand_on_top(self, platform=None, constant=False):
+    def stand_on_top(self, constant=False):
         if constant:
             if self.y + self.h > constant:
                 self.gravity(False)
-        if platform:
-            if platform.x < self.x + self.w and self.x < platform.x + platform.w:
-                self.gravity(False)
-            elif not self.state["in_air"]:
-                self.gravity(True)
+        # if platform:
+        #     if platform.x < self.x + self.w and self.x < platform.x + platform.w:
+        #         self.gravity(False)
+        #     elif not self.state["in_air"]:
+        #         self.gravity(True)
 
     def orient_image(self, speedX):
         if self.direction == "right" and speedX < 0:
