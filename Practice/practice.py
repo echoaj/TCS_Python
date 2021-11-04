@@ -1,14 +1,5 @@
 
 
-string = "Thanks diane I will order the medicine next week and let you know."
-tokens = string.split()
-lables = [0] * len(tokens)
-
-
-print(tokens)
-print(lables)
-
-
 
 
 
