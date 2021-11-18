@@ -19,6 +19,7 @@ screen = pg.display.set_mode((WIDTH, HEIGHT))
 pg.display.set_caption("Super Mario Game")
 clock = pg.time.Clock()
 
+
 TILE_SIZE = 25
 ground = get_image("./images/ground.png", TILE_SIZE)
 mario = get_image("./images/mario.png", TILE_SIZE)
