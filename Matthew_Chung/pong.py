@@ -1,10 +1,12 @@
 import pygame as pg
+import pygame.freetype as pf
 
 pg.init()
 
 width = 700
 height = 700
 
+font = pf.SysFont("Arial", 50)
 screen = pg.display.set_mode((width, height))
 clock = pg.time.Clock()
 
@@ -14,7 +16,7 @@ by = 350
 br = 25
 bcolor = (0, 255, 0)
 speed_x = -3
-speed_y = 0
+speed_y = 2
 
 # Paddle Left
 pad_left_x = 25
@@ -28,8 +30,15 @@ pad_right_x = width - 40
 pad_right_y = 300
 pr_color = (0, 0, 255)
 
+scoreP1 = 0
+scoreP2 = 0
+
 while True:
     screen.fill((50, 50, 50))
+
+    font.render_to(screen, (50,50), str(scoreP1), (200,0,0))
+    font.render_to(screen, (width-50,50), str(scoreP2), (0,0,200))
+
     for event in pg.event.get():
         if event.type == pg.QUIT:
             pg.quit()
@@ -63,6 +72,19 @@ while True:
 
     if by + br > height or by - br < 0:
         speed_y *= -1
+
+    # Check if ball goes off screen on the left
+    if bx+br < 0:
+        bx = width / 2
+        by = height / 2
+        scoreP2 += 1
+
+    # Check if ball goes off screen on the right
+    if bx-br > width:
+        bx = width/2
+        by = height/2
+        scoreP1 += 1
+
 
     # Draw left paddle
     pg.draw.rect(screen, pl_color, (pad_left_x, pad_left_y, pad_width, pad_height))

@@ -1,14 +1,16 @@
+# import numpy as np
+# import uuid
+print("hello world")
 
+num = 5
 
-
-
-
-
-
-
-
-
-
+match num:
+    case 2:
+        print("cool")
+    case 5:
+        print("sup")
+    case 7:
+        print("Awesome")
 
 
 
