@@ -24,7 +24,6 @@ ground = get_image("./images/ground.png", TILE_SIZE)
 mario = get_image("./images/mario.png", TILE_SIZE)
 game_map = get_level(1)
 tile_rects = get_rectangles(game_map, TILE_SIZE)
-
 # plr = Player2(mario, tile_rects)
 
 
