@@ -1,3 +1,4 @@
+from TCS_Python.Keith.Mario_Game2.mario import Player
 from helper_functions import*
 
 
@@ -27,19 +28,23 @@ game_map = get_level(1)
 tile_rects = get_rectangles(game_map, TILE_SIZE)
 # plr = Player2(mario, tile_rects)
 
+plr = Player(mario, tile_rects)
+
+# after change picture when jumping
 
 while True:
     background((0,0,0))
-    # plr.display(screen)
-    # plr.set_movement()
-    # plr.gravity(True)
-    # plr.move()
+
+    plr.display(screen)
+    plr.set_movement()
+    plr.gravity(True)
+    plr.move()
 
     for event in pg.event.get():        # event loop
         if event.type == QUIT:          # check for window quit
             pg.quit()                   # stop pygame
             exit()                      # stop script
-        # plr.move_control(event)
+        plr.move_control(event)
 
     pg.display.update()
     clock.tick(60)

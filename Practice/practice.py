@@ -1,18 +1,16 @@
-# import numpy as np
-# import uuid
-print("hello world")
-
-num = 5
-
-match num:
-    case 2:
-        print("cool")
-    case 5:
-        print("sup")
-    case 7:
-        print("Awesome")
 
 
+actualHeight = 0
+
+jheight = 5
+velocity = jheight
+
+gravity = 1
+
+while velocity > 0:
+    actualHeight += velocity #(velocity * gravity) + (gravity / velocity)
+    velocity -= gravity
+    print(actualHeight)
 
 
 
@@ -33,50 +31,75 @@ match num:
 
 
 
+'''
+print()
+print()
+import asyncio
+
+# operator overloading
+# decorators
+# iterables vs iterators, generators
+# design patterns
+# dependency injection
+
+class BankAccount:
+    def __init__(self, name, amount):
+        self.name = name
+        self.money = amount
+
+    def display(self):
+        print(self.name, self.money)
+
+    def __add__(self, other):
+        return self.money + other.money
+
+
+
+savings = BankAccount("Alex", 50000)
+checking = BankAccount("Josh", 90000)
+print(savings + checking)
 
 
 
 
-# start = {
-#     "life":(0, 0, "job", "college"),
-#     "job":(1, 40000, "career", "keepjob"),
-#     "keepjob":(5, 200000, "wife", "single"),
-#     "college":(4, -100000, "masters", "career"),
-#     "masters":(2, -50000, "PHD", "goodcareer"),
-#     "career":(5, 10000, "wife", "single"),
-#     "goodcareer":(5, 20000, "wife", "sngle"),
-#     "PHD":(4, -100000, "greatcareer", "greatcareer"),
-#     "single":(7, 0, "end", "end"),
-#     "greatcareer":(5, 500000, "wife", "single"),
-#     "wife":(7, 200000, "kids", "end"),
-#     "kids":(1, 14000, "end", "end"),
-#     "end":()
-# }
+from time import *
+
+# async def fun():
+#     print("hello world")
+#     await asyncio.sleep(5)
+#     print("done")
 #
-# a1 = [5,6,3]
-# a2 = [8,8,5]
-# a = [*a1, *a2]
-# print(a)
-#
-# g, *u = [5,6,3,3,2]
-# print(g, u)
-#
-# money = 0
-# time = 0
-#
-# status = None
-# tuple = start["life"]
-#
-#
-# while(tuple):
-#     years, cash, choice1, choice2 = tuple
-#     money += cash
-#     time += years
-#
-#     status = f'Money {money}\t\tTime {time}\nOptions are {choice1} or {choice2}.\nPick 1 or 2: '
-#     option = int(input(status)) + 1
-#     decision = tuple[option]
-#     tuple = start[decision]
-#     print()
-#
-# print("Game Ended")
+# asyncio.run(fun())
+
+
+print()
+print()
+
+
+grassID = 2
+grassDur = 3    # takes 3 hits
+
+stoneID = 3
+stoneDur = 5    # takes 3 hits
+
+blocks = [0,3,3,1,2,1,2,0]    # block type
+hitCount = [0, 0, 0]     # [block_type, hitcount]
+
+while True:
+    print(hitCount)
+    i = int(input("Pick a block: "))
+    result = blocks[i]
+    print("result: " + str(result))
+    if result == hitCount[0]:
+        # increase hit count
+        hitCount[1] += 1
+        if hitCount[0] == grassID and hitCount[1] >= grassDur:
+            print("grass destoryed")
+            hitCount = [0, 0]
+        if hitCount[0] == stoneID and hitCount[1] >= stoneDur:
+            print("stone destroyed")
+            hitCount = [0, 0]
+    else:
+        hitCount = [result, 1]
+
+'''
