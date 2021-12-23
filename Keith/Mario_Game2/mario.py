@@ -3,25 +3,44 @@ from pygame.locals import *
 
 
 class Player:
-    def __init__(self, img, tile_rects):
+    def __init__(self, img, img_jump, tile_rects):
         self.plr = pg.Rect(50, 50, img.get_width(), img.get_height())
         self.img = img
+        self.img_jump = img_jump
         self.tile_rects = tile_rects
         self.movement = [0, 0]
         self.moving_left = False
         self.moving_right = False
         self.velocityY = 0
         self.air_time = 0
+        self.facing = "right"
+        self.moveDirection = "right"
 
     def display(self, screen):
-        screen.blit(self.img, (self.plr.x, self.plr.y))
+        # If facing right but moving left
+        if self.facing == "right" and self.moveDirection == "left":
+            self.img = self.flip(self.img)
+            self.img_jump = self.flip(self.img_jump)
+        # If facing left but moving right
+        if self.facing == "left" and self.moveDirection == "right":
+            self.img = self.flip(self.img)
+            self.img_jump = self.flip(self.img_jump)
+        if self.air_time < 6:
+            screen.blit(self.img, (self.plr.x, self.plr.y))         # regular mario
+        else:
+            screen.blit(self.img_jump, (self.plr.x, self.plr.y))    # jump mario
+
+    def flip(self, img):
+        return pg.transform.flip(img, True, False)
 
     def set_movement(self):
         self.movement = [0, 0]
         if self.moving_right:
             self.movement[0] += 3  # move right
+            self.moveDirection = "right"
         if self.moving_left:
             self.movement[0] -= 3  # move left
+            self.moveDirection = "left"
 
     def move(self):
         collision_types = {"right": False, "left": False, "up": False, "down": False}
@@ -65,8 +84,10 @@ class Player:
         if event.type == KEYDOWN:
             if event.key == K_RIGHT:
                 self.moving_right = True
+                self.facing = "right"
             if event.key == K_LEFT:
                 self.moving_left = True
+                self.facing = "left"
             if event.key == K_UP:
                 if self.air_time < 6:
                     self.velocityY = -5

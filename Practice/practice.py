@@ -1,18 +1,28 @@
 
 
-actualHeight = 0
-
-jheight = 5
-velocity = jheight
-
-gravity = 1
-
-while velocity > 0:
-    actualHeight += velocity #(velocity * gravity) + (gravity / velocity)
-    velocity -= gravity
-    print(actualHeight)
+'''
+Create a recursive algorithm that returns True or False
+if there exists a combination of x and/or y numbers that
+add up to a limit.
+'''
 
 
+def addup(limit, x, y, total):
+    if total == limit:
+        return True
+    if total > limit:
+        return False
+
+    r1 = addup(limit, x, y, total+x)
+    r2 = addup(limit, x, y, total+y)
+    return r1 or r2
+
+
+print(addup(11, 2, 3, 0))   # True (2+2+2+2+3 = 11)
+print(addup(10, 5, 3, 0))   # True (5+5 = 10)
+print(addup(8, 3, 6, 0))    # False (No combination exists)
+print(addup(19, 5, 7, 0))   # True (5+7+7 = 19)
+print(addup(13, 4, 2, 0))   # False (No combination exists)
 
 
 
@@ -26,6 +36,31 @@ while velocity > 0:
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# actualHeight = 0
+#
+# jheight = 5
+# velocity = jheight
+#
+# gravity = 1
+#
+# while velocity > 0:
+#     actualHeight += velocity #(velocity * gravity) + (gravity / velocity)
+#     velocity -= gravity
+#     print(actualHeight)
 
 
 
