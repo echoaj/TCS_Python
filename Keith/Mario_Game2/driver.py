@@ -1,4 +1,5 @@
 from TCS_Python.Keith.Mario_Game2.mario import Player
+from interactions import *
 from helper_functions import*
 from enemy import*
 
@@ -26,29 +27,42 @@ TILE_SIZE = 25
 ground = get_image("./images/ground.png", TILE_SIZE)
 mario = get_image("./images/mario.png", TILE_SIZE+20)
 marioJump = get_image("./images/mario_jump.png", TILE_SIZE+20)
+mariodead = get_image("./images/mario_dead.png", TILE_SIZE+20)
 goomba = get_image(("./images/goomba.png"), TILE_SIZE+20)
+goomba_stomped = get_image("./images/goomba_stomped.png", TILE_SIZE+10)
 game_map = get_level(1)
 tile_rects = get_rectangles(game_map, TILE_SIZE)
 # plr = Player2(mario, tile_rects)
 
-plr = Player(mario, marioJump, tile_rects)
-gmb = Enemy(goomba, tile_rects)
+
+plr = Player(mario, marioJump, mariodead, tile_rects, 50, 100)
+gmb = Enemy(goomba, goomba_stomped, tile_rects)
+
+
+reaction = Interaction(plr, gmb)
+
 
 # after change picture when jumping
 
 while True:
-    background((255,255,255))
 
+
+    background((135,180,255))
     plr.display(screen)
     plr.set_movement()
     plr.gravity(True)
     plr.move()
+    plr.stateMachine()
+
+    reaction.checkTouchGombaSide()
+    reaction.checkGoombaStomped()
 
     gmb.display(screen)
     gmb.set_movement()
     gmb.gravity(True)
     gmb.move()
     gmb.side_movement()
+    gmb.stateMachine()
 
     for event in pg.event.get():        # event loop
         if event.type == QUIT:          # check for window quit

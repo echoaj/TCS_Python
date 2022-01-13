@@ -3,10 +3,11 @@ from pygame.locals import *
 
 
 class Player:
-    def __init__(self, img, img_jump, tile_rects):
-        self.plr = pg.Rect(50, 50, img.get_width(), img.get_height())
+    def __init__(self, img, img_jump, img_dead, tile_rects, x, y):
+        self.plr = pg.Rect(x, y, img.get_width(), img.get_height())
         self.img = img
         self.img_jump = img_jump
+        self.img_dead = img_dead
         self.tile_rects = tile_rects
         self.movement = [0, 0]
         self.moving_left = False
@@ -15,6 +16,7 @@ class Player:
         self.air_time = 0
         self.facing = "right"
         self.moveDirection = "right"
+        self.state = {"dead":False}
 
     def display(self, screen):
         # If facing right but moving left
@@ -55,23 +57,24 @@ class Player:
             self.air_time += 1
 
     def collision(self, collision_types, type):
-        for tile in self.tile_rects:
-            # check if you collide with something
-            if self.plr.colliderect(tile):
-                if type == "horizontal":       # checks if moving right or left
-                    if self.movement[0] > 0:    # check if moving right
-                        self.plr.right = tile.left
-                        collision_types["right"] = True
-                    if self.movement[0] < 0:    # check if moving left
-                        self.plr.left = tile.right
-                        collision_types["left"] = True
-                if type == "vertical":         # checks if moving right or left
-                    if self.movement[1] > 0:    # check if moving right
-                        self.plr.bottom = tile.top
-                        collision_types["down"] = True
-                    if self.movement[1] < 0:    # check if moving left
-                        self.plr.top = tile.bottom
-                        collision_types["up"] = True
+        if not self.state["dead"]:
+            for tile in self.tile_rects:
+                # check if you collide with something
+                if self.plr.colliderect(tile):
+                    if type == "horizontal":       # checks if moving right or left
+                        if self.movement[0] > 0:    # check if moving right
+                            self.plr.right = tile.left
+                            collision_types["right"] = True
+                        if self.movement[0] < 0:    # check if moving left
+                            self.plr.left = tile.right
+                            collision_types["left"] = True
+                    if type == "vertical":         # checks if moving up or down
+                        if self.movement[1] > 0:    # check if moving down
+                            self.plr.bottom = tile.top
+                            collision_types["down"] = True
+                        if self.movement[1] < 0:    # check if moving up
+                            self.plr.top = tile.bottom
+                            collision_types["up"] = True
 
     def gravity(self, on):
         if on:
@@ -96,3 +99,14 @@ class Player:
                 self.moving_right = False
             if event.key == K_LEFT:
                 self.moving_left = False
+
+    def stateMachine(self):
+        if self.state["dead"]:
+            self.death()
+
+    def death(self):
+        self.img = self.img_dead
+        self.img_jump = self.img_dead
+        self.moving_left = False
+        self.moving_right = False
+        self.plr.y -= 5     # Jump animation

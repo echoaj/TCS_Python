@@ -2,9 +2,10 @@ import pygame as pg
 
 
 class Enemy:
-    def __init__(self, img, tile_rects):
+    def __init__(self, img, stompedImg, tile_rects):
         self.enm = pg.Rect(200, 125, img.get_width(), img.get_height())
         self.img = img
+        self.stompedImg = stompedImg
         self.tile_rects = tile_rects
         self.movement = [0, 0]
         self.moving_left = False
@@ -14,6 +15,7 @@ class Enemy:
         self.moveDirection = "right"
         self.speed = 2
         self.timer = 0
+        self.state = {"stomped":False}
 
     def display(self, screen):
         if self.timer % 10 == 0:
@@ -52,7 +54,7 @@ class Enemy:
                     if self.movement[0] < 0:  # check if moving left
                         self.enm.left = tile.right
                         collision_types["left"] = True
-                if type == "vertical":  # checks if moving right or left
+                if type == "vertical" and not self.state["stomped"]:  # checks if moving right or left
                     if self.movement[1] > 0:  # check if moving down
                         self.enm.bottom = tile.top
                         collision_types["down"] = True
@@ -68,16 +70,25 @@ class Enemy:
             self.velocityY = 0
 
     def side_movement(self):
-
-        if self.timer < 100:
-            self.moving_right = True
-            self.moving_left = False
-            self.facing = "right"
-        elif 100 <= self.timer < 200:
-            self.moving_left = True
-            self.moving_right = False
-            self.facing = "left"
+        if not self.state["stomped"]:
+            if self.timer < 101:
+                self.moving_right = True
+                self.moving_left = False
+                self.facing = "right"
+            elif 101 <= self.timer < 200:
+                self.moving_left = True
+                self.moving_right = False
+                self.facing = "left"
+            else:
+                self.timer = 0
+            self.timer += 1
         else:
-            self.timer = 0
+            self.moving_right = False
+            self.moving_left = False
 
-        self.timer += 1
+    def stateMachine(self):
+        if self.state["stomped"]:
+            self.death()
+
+    def death(self):
+        self.img = self.stompedImg
