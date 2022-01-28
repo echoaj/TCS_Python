@@ -19,18 +19,21 @@ class Player:
         self.state = {"dead":False}
 
     def display(self, screen):
-        # If facing right but moving left
-        if self.facing == "right" and self.moveDirection == "left":
-            self.img = self.flip(self.img)
-            self.img_jump = self.flip(self.img_jump)
-        # If facing left but moving right
-        if self.facing == "left" and self.moveDirection == "right":
-            self.img = self.flip(self.img)
-            self.img_jump = self.flip(self.img_jump)
         if self.air_time < 6:
             screen.blit(self.img, (self.plr.x, self.plr.y))         # regular mario
         else:
             screen.blit(self.img_jump, (self.plr.x, self.plr.y))    # jump mario
+
+    def orient(self):
+        if self.moving_right:
+            self.facing = "right"
+        if self.moving_left:
+            self.facing = "left"
+        # If facing right but moving left
+        if self.facing == "right" and self.moveDirection == "left" or \
+           self.facing == "left" and self.moveDirection == "right":# If facing left but moving right
+            self.img = self.flip(self.img)
+            self.img_jump = self.flip(self.img_jump)
 
     def flip(self, img):
         return pg.transform.flip(img, True, False)
@@ -87,10 +90,8 @@ class Player:
         if event.type == KEYDOWN:
             if event.key == K_RIGHT:
                 self.moving_right = True
-                self.facing = "right"
             if event.key == K_LEFT:
                 self.moving_left = True
-                self.facing = "left"
             if event.key == K_UP:
                 if self.air_time < 6:
                     self.velocityY = -5

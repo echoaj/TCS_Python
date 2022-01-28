@@ -2,6 +2,7 @@ from TCS_Python.Keith.Mario_Game2.mario import Player
 from interactions import *
 from helper_functions import*
 from enemy import*
+from mushroom import *
 
 
 def background(rgb):
@@ -11,6 +12,8 @@ def background(rgb):
         for i in row:
             if i == 1:
                 screen.blit(ground, (x, y))
+            if i == 2:
+                screen.blit(brick, (x, y))
             x += TILE_SIZE
         x = 0
         y += TILE_SIZE
@@ -25,29 +28,34 @@ clock = pg.time.Clock()
 
 TILE_SIZE = 25
 ground = get_image("./images/ground.png", TILE_SIZE)
+brick = get_image("./images/brick.png", TILE_SIZE)
 mario = get_image("./images/mario.png", TILE_SIZE+20)
 marioJump = get_image("./images/mario_jump.png", TILE_SIZE+20)
 mariodead = get_image("./images/mario_dead.png", TILE_SIZE+20)
 goomba = get_image(("./images/goomba.png"), TILE_SIZE+20)
 goomba_stomped = get_image("./images/goomba_stomped.png", TILE_SIZE+10)
+mushroom = get_image("./images/mushroom.png", TILE_SIZE)
 game_map = get_level(1)
 tile_rects = get_rectangles(game_map, TILE_SIZE)
 # plr = Player2(mario, tile_rects)
 
+# pg.mixer.music.load('./music/supermariobros.mp3')
+# pg.mixer.music.play(-1)
 
 plr = Player(mario, marioJump, mariodead, tile_rects, 50, 100)
 gmb = Enemy(goomba, goomba_stomped, tile_rects)
+msr = Mushroom(mushroom, tile_rects, 400, 125)
 
 
-reaction = Interaction(plr, gmb)
+reaction = Interaction(plr, gmb, msr)
 
 
 # after change picture when jumping
 
 while True:
 
-
     background((135,180,255))
+    plr.orient()
     plr.display(screen)
     plr.set_movement()
     plr.gravity(True)
@@ -63,6 +71,12 @@ while True:
     gmb.move()
     gmb.side_movement()
     gmb.stateMachine()
+
+    msr.display(screen)
+    msr.set_movement()
+    msr.gravity(True)
+    msr.move()
+    msr.side_movement()
 
     for event in pg.event.get():        # event loop
         if event.type == QUIT:          # check for window quit
