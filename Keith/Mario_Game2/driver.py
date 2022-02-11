@@ -10,10 +10,8 @@ def background(rgb):
     x = y = 0
     for row in game_map:
         for i in row:
-            if i == 1:
-                screen.blit(ground, (x, y))
-            if i == 2:
-                screen.blit(brick, (x, y))
+            if i != 0:
+                screen.blit(bg_tiles[i-1], (x, y))
             x += TILE_SIZE
         x = 0
         y += TILE_SIZE
@@ -29,22 +27,29 @@ clock = pg.time.Clock()
 TILE_SIZE = 25
 ground = get_image("./images/ground.png", TILE_SIZE)
 brick = get_image("./images/brick.png", TILE_SIZE)
+pipeTL = get_image("./images/pipeTL.png", TILE_SIZE)
+pipeTR = get_image("./images/pipeTR.png", TILE_SIZE)
+pipeBR = get_image("./images/pipeBR.png", TILE_SIZE)
+pipeBL = get_image("./images/pipeBL.png", TILE_SIZE)
+bg_tiles = [ground, brick, pipeTL, pipeTR, pipeBR, pipeBL]
+
 mario = get_image("./images/mario.png", TILE_SIZE+20)
 marioJump = get_image("./images/mario_jump.png", TILE_SIZE+20)
+marioBig = get_image("./images/mario_big.png", TILE_SIZE+20)
 mariodead = get_image("./images/mario_dead.png", TILE_SIZE+20)
 goomba = get_image(("./images/goomba.png"), TILE_SIZE+20)
 goomba_stomped = get_image("./images/goomba_stomped.png", TILE_SIZE+10)
 mushroom = get_image("./images/mushroom.png", TILE_SIZE)
 game_map = get_level(1)
 tile_rects = get_rectangles(game_map, TILE_SIZE)
-# plr = Player2(mario, tile_rects)
+
 
 # pg.mixer.music.load('./music/supermariobros.mp3')
 # pg.mixer.music.play(-1)
 
-plr = Player(mario, marioJump, mariodead, tile_rects, 50, 100)
+plr = Player(mario, marioJump, mariodead, marioBig, tile_rects, 50, 100)
 gmb = Enemy(goomba, goomba_stomped, tile_rects)
-msr = Mushroom(mushroom, tile_rects, 400, 125)
+msr = Mushroom(mushroom, tile_rects, 410, 125)
 
 
 reaction = Interaction(plr, gmb, msr)
@@ -64,6 +69,7 @@ while True:
 
     reaction.checkTouchGombaSide()
     reaction.checkGoombaStomped()
+    reaction.checkTouchMushroom()
 
     gmb.display(screen)
     gmb.set_movement()

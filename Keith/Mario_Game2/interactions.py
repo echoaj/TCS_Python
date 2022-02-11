@@ -1,5 +1,6 @@
 import pygame as pg
 
+
 class Interaction:
     def __init__(self, plr, gmb, msh):
         self.plr = plr
@@ -21,6 +22,8 @@ class Interaction:
                 if self.plr.movement[1] < 1:
                     self.plr.state["dead"] = True
 
-    def checkTouchMushtoom(self):
+    def checkTouchMushroom(self):
         if self.plrRect.colliderect(self.mshRect):
-            print("Touching")
+            self.plr.img = self.plr.img_big
+            self.plr.img_jump = self.plr.img_big
+            self.msh.msh.x = -200

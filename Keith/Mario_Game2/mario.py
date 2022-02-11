@@ -3,11 +3,12 @@ from pygame.locals import *
 
 
 class Player:
-    def __init__(self, img, img_jump, img_dead, tile_rects, x, y):
+    def __init__(self, img, img_jump, img_dead, img_big, tile_rects, x, y):
         self.plr = pg.Rect(x, y, img.get_width(), img.get_height())
         self.img = img
         self.img_jump = img_jump
         self.img_dead = img_dead
+        self.img_big = img_big
         self.tile_rects = tile_rects
         self.movement = [0, 0]
         self.moving_left = False
@@ -16,7 +17,7 @@ class Player:
         self.air_time = 0
         self.facing = "right"
         self.moveDirection = "right"
-        self.state = {"dead":False}
+        self.state = {"dead":False, "big":False}
 
     def display(self, screen):
         if self.air_time < 6:

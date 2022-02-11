@@ -12,7 +12,7 @@ class Mushroom:
         self.velocityY = 0
         self.facing = "right"
         self.moveDirection = "right"
-        self.speed = 2
+        self.speed = 1
         self.timer = 0
 
     def display(self, screen):
