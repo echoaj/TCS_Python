@@ -1,30 +1,39 @@
 
-from time import*
-import threading
+visited = []
+matrix = [[0, 0, 0, 0, 0, 0],
+          [0, 1, 0, 3, 4, 0],
+          [0, 5, 6, 7, 8, 0],
+          [0, 9, 0, 0, 0, 0],
+          [0, 13, 14, 15, 16, 0],
+          [0, 0,   0,  0,  0, 0]]
+
+solvable = False
 
 
-def fun1():
-    while True:
-        print("Hello")
-        sleep(1)
+def dfs(matrix, x, y):
+    global solvable
+
+    if solvable:
+        return solvable
+    if matrix[x][y] == 16:
+        return True
+    if matrix[x][y] == 0:
+        return False
+    if matrix[x][y] in visited:
+        return False
+    else:
+        visited.append(matrix[x][y])
+
+    left =  dfs(matrix, x + 1, y)   # check right neighbor
+    right = dfs(matrix, x, y + 1)   # check down neighbor
+    down =  dfs(matrix, x + 1, y)   # check left neighbor
+    up =    dfs(matrix, x, y - 1)   # check up neighbor
+
+    solvable = left or right or down or up
+    return solvable
 
 
-def fun2():
-    while True:
-        print("Bye")
-        sleep(1)
+result = dfs(matrix, 1, 1)
+print(result)
 
-
-t1 = threading.Thread(target=fun1)
-t2 = threading.Thread(target=fun2)
-
-t1.start()
-sleep(0.5)
-t2.start()
-
-t1.join()
-t2.join()
-
-print("Done")
-
-
+print(visited)
