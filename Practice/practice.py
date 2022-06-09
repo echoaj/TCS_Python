@@ -1,30 +1,46 @@
 
-queue = []
-visited = []
+
+graph = {'A': ['B', 'C', 'D'],
+         'B': ['A', 'G'],
+         'G': ['B'],
+         'C': ['A', 'E', 'H'],
+         'D': ['A', 'E'],
+         'E': ['C', 'D', 'F', 'H', 'I'],
+         'F': ['E'],
+         'H': ['C', 'E', 'J'],
+         'I': ['E'],
+         'J': ['H']
+        }
+
+visted = []
 
 
-def breadth_first_search(x, y):
-    queue.append((x, y))
-    visited.append((x, y))
-    while queue:
-        x, y = queue.pop(0)
-        #             right      down      left       up
-        neighbors = [(x+1, y), (x, y+1), (x-1, y), (x, y-1)]
-        for x, y in neighbors:
-            if (x, y) not in visited and matrix[x][y] != 0:
-                queue.append((x, y))
-                visited.append((x, y))
+# create a dfs recursive function
+def dfs(node):
+    visted.append(node)
+    for n in graph[node]:
+        if n not in visted:
+            dfs(n)
 
 
-# matrix of zeros
-matrix = [[0, 0, 0, 0, 0, 0],
-          [0, 1, 0, 3, 4, 0],
-          [0, 5, 6, 7, 8, 0],
-          [0, 9, 0, 0, 0, 0],
-          [0, 13, 14, 15, 16, 0],
-          [0, 0,   0,  0,  0, 0]]
+# 1) stop recursion when node is reached
+# 2) return true if solvable else return false
+def dfs_modified(node, end):
+    if node == end:
+        visted.append(node)
+        return True
+    visted.append(node)
+    for n in graph[node]:
+        if n not in visted:
+            solved = dfs_modified(n, end)
+            if solved:
+                return True
+    return False
 
-breadth_first_search(1, 1)
-print(visited)
-for x, y in visited:
-    print(matrix[x][y])
+
+dfs('A')
+print(visted)
+visted.clear()
+solvable = dfs_modified('A', 'F')
+print(visted)
+print(solvable)
