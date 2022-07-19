@@ -1,63 +1,9 @@
 
 from time import*
 from threading import*
-
-'''
-def fun1():
-    while True:
-        print("Hello")
-        sleep(1)
-
-def fun2():
-    while True:
-        print("Bye")
-        sleep(1)
-
-
-t1 = Thread(target=fun1)
-t2 = Thread(target=fun2)
-
-t1.start()
-sleep(0.5)
-t2.start()
-
-t1.join()
-t2.join()
-
-print("Done")
-
-'''
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 from Queue import*
 from random import*
 from time import *
-
 
 
 class Person:
@@ -84,8 +30,6 @@ class Person:
         print(self.BLUE + self.BOLD + f"Person {self.ID} finished" + self.END)
 
 
-
-
 def enqueue():
     global x, total
     while True:
@@ -107,7 +51,6 @@ def dequeue():
             total -= p.print_time
             p.finish()
             q.pop()
-
 
 
 q = Queue()

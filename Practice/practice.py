@@ -1,12 +1,15 @@
 
 
-# Longest Palindromic Substring
-# Create algorithm to return the longest palindomic substring
+array = [1, 2, 0, 4, 0, 7, 0, 0, 0]         # [1,2,4,7,9,0,0,0,0]
 
-string = "abbcdnekensld"       # "neken" -> 5
+l = 0
+r = 0
+while r < len(array):
+    if array[r] == 0:
+        r += 1
+    else:
+        array[l], array[r] = array[r], array[l]
+        r += 1
+        l += 1
 
-
-count = 0
-for m in range(len(string)):
-    pass
-
+print(array)
