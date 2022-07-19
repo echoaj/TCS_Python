@@ -14,3 +14,11 @@ Input nums = [3, 2, 4], target = 6,
 Output: [1, 2]
 """
 
+pairs = {}
+
+nums = [6, 2, 1, 2, 5, 8, 7, 11, 15]
+target = 9
+
+
+
+
