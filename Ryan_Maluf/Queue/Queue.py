@@ -5,7 +5,7 @@ class Queue:
 
     def pop(self):
         if not self.is_empty():
-            self.__array.pop(0)
+            return self.__array.pop(0)
         else:
             print("stack is empty")
 
