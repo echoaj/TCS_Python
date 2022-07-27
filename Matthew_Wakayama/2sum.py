@@ -16,8 +16,23 @@ Output: [1, 2]
 
 pairs = {}
 
-nums = [6, 2, 1, 2, 5, 8, 7, 11, 15]
+nums = [-4,6,2,3,5,6,3]
 target = 9
+
+
+output = []
+
+for i in range(len(nums)):
+    num = nums[i]
+    if num in pairs:
+        output.append(pairs[num])
+        output.append(i)
+        break
+    else:
+        compilment = target - num
+        pairs[compilment] = i
+
+print(output)
 
 
 
