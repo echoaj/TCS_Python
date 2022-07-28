@@ -54,7 +54,7 @@ def get_path(node):
     if node in tracer:
         get_path(tracer[node])
 
-
+"""
 bfs("A")
 print(visited)
 visited.clear()
@@ -69,3 +69,8 @@ print(tracer)
 print(path)
 
 
+tracer = {}
+
+tracer.update({"val": "key"})
+tracer["val2"] = "key2"
+"""
