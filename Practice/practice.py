@@ -1,15 +1,26 @@
+import urllib.request
+import json
 
 
-array = [1, 2, 0, 4, 0, 7, 0, 0, 0]         # [1,2,4,7,9,0,0,0,0]
+def get_joke(url, category):
+    api = url + category
+    req = urllib.request.Request(
+        url=api,
+        headers={'User-Agent': 'Mozilla/5.0'}
+    )
+    webURL = urllib.request.urlopen(req)
+    data = webURL.read()
+    joke = json.loads(data)
+    return joke['value']
 
-l = 0
-r = 0
-while r < len(array):
-    if array[r] == 0:
-        r += 1
-    else:
-        array[l], array[r] = array[r], array[l]
-        r += 1
-        l += 1
 
-print(array)
+all_categories = ["animal", "career", "celebrity", "fashion",
+                  "food", "history", "money", "movie", "music",
+                  "science", "sport", "travel"]
+
+category = "animal"
+url = "https://api.chucknorris.io/jokes/random?category="
+
+joke = get_joke(url, category)
+print(joke)
+
